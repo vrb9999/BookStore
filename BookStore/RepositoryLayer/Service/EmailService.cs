@@ -15,14 +15,14 @@ namespace RepositoryLayer.Service
                 client.EnableSsl = true;
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
                 client.UseDefaultCredentials = true;
-                client.Credentials = new NetworkCredential("testingemailvinay@gmail.com", "obpwhgpaasbhfvjg");
+                client.Credentials = new NetworkCredential("testingemailvinay99@gmail.com", "*");
                 MailMessage msgObj = new MailMessage();
                 msgObj.To.Add(email);
                 msgObj.IsBodyHtml = true;
-                msgObj.From = new MailAddress("testingemailvinay@gmail.com");
+                msgObj.From = new MailAddress("testingemailvinay99@gmail.com");
                 msgObj.Subject = "Password Reset Link";
                 msgObj.Body = "<html><body><p><b>Hi" + " " + $"{FullName}" + " </b>,<br/>Please click the below link for reset password.<br/>" +
-                   $"www.fundooapp.com/reset-password/{token}" +
+                   $"www.bookstore.com/reset-password/{token}" +
                    "<br/><br/><br/><b>Thanks&Regards </b><br/><b>Mail Team(donot - reply to this mail)</b></p></body></html>";
                 client.Send(msgObj);
             }

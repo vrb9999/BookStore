@@ -49,7 +49,7 @@ END CATCH
 
 exec spLoginUser 'vinay@gmail.com' ,'Vinay@123'
 
----------------------------------------------- Forgot password ----------------------------------------------
+---------------------------------------------- Forgot Password ----------------------------------------------
 Create procedure spForgetPasswordUser(
 @Email varchar(50)
 )
@@ -67,3 +67,21 @@ SELECT
 END CATCH
 
 exec spForgetPasswordUser 'vinay@gmail.com'
+
+---------------------------------------------- Reset Password ----------------------------------------------
+Create procedure spResetPassword(
+@Email varchar(50),
+@Password varchar(20)
+)
+As
+Begin try
+update Users set Password=@Password where Email=@Email 
+end try
+Begin catch
+SELECT 
+	ERROR_NUMBER() AS ErrorNumber,
+	ERROR_STATE() AS ErrorState,
+	ERROR_PROCEDURE() AS ErrorProcedure,
+	ERROR_LINE() AS ErrorLine,
+	ERROR_MESSAGE() AS ErrorMessage;
+END CATCH
