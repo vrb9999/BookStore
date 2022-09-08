@@ -75,5 +75,25 @@ namespace BookStore.Controllers
                 throw ex;
             }
         }
+
+        [Authorize(Roles = Role.Admin)]
+        [HttpPost("UpdateBook")]
+        public IActionResult UpdateBook(int BookId, BookModel bookModel)
+        {
+            try
+            {
+                var result = this.bookBL.UpdateBooks(BookId, bookModel);
+                if (result == null)
+                {
+                    return this.BadRequest(new { success = false, Message = "Failed to update book!!" });
+                }
+
+                return this.Ok(new { success = true, Message = "Book Updated Sucessfully...", data = result });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

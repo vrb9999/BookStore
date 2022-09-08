@@ -10,5 +10,6 @@ namespace BusinessLayer.Interface
         public BookModel AddBook(BookModel bookModel);
         public List<BookModel> GetAllBooks();
         public BookModel GetBookById(int BookId);
+        public BookModel UpdateBooks(int BookId, BookModel bookModel);
     }
 }

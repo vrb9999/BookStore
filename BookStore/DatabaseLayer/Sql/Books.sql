@@ -71,3 +71,30 @@ SELECT
 	ERROR_LINE() AS ErrorLine,
 	ERROR_MESSAGE() AS ErrorMessage;
 END CATCH
+
+---------------------------------------------- Update Book ----------------------------------------------
+create procedure spUpdateBook(
+@BookId int,
+@BookName varchar(max),
+@AuthorName varchar(max),
+@Description varchar(max),
+@Quantity int,
+@OriginalPrice int,
+@DiscountPrice int,
+@AvgRating int,
+@RatingCount int,
+@BookImg varchar(max) 
+)  
+As
+Begin try
+update Book set BookName=@BookName,AuthorName=@AuthorName,Description=@Description,Quantity=@Quantity,OriginalPrice=@OriginalPrice,DiscountPrice=@DiscountPrice,AvgRating=@AvgRating,RatingCount=@RatingCount,BookImg=@BookImg where BookId=@BookId
+select * from Book where BookId=@BookId
+end try 
+Begin catch
+SELECT
+ ERROR_NUMBER() AS ErrorNumber,  
+ ERROR_STATE() AS ErrorState,  
+ ERROR_PROCEDURE() AS ErrorProcedure,  
+ ERROR_LINE() AS ErrorLine,  
+ ERROR_MESSAGE() AS ErrorMessage;  
+END CATCH

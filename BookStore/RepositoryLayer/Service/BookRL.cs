@@ -146,5 +146,64 @@ namespace RepositoryLayer.Service
                 sqlConnection.Close();
             }
         }
+
+        public BookModel UpdateBooks(int BookId, BookModel bookModel)
+        {
+
+            SqlConnection sqlconnection = new SqlConnection(this.connectionString);
+            try
+            {
+                {
+                    sqlconnection.Open();
+
+                    SqlCommand com = new SqlCommand("spUpdateBook", sqlconnection);
+                    com.CommandType = CommandType.StoredProcedure;
+                    com.Parameters.AddWithValue("@BookId", BookId);
+                    com.Parameters.AddWithValue("@BookName", bookModel.BookName);
+                    com.Parameters.AddWithValue("@AuthorName", bookModel.AuthorName);
+                    com.Parameters.AddWithValue("@Description", bookModel.Description);
+                    com.Parameters.AddWithValue("@Quantity", bookModel.Quantity);
+                    com.Parameters.AddWithValue("@OriginalPrice", bookModel.OriginalPrice);
+                    com.Parameters.AddWithValue("@DiscountPrice", bookModel.DiscountPrice);
+                    com.Parameters.AddWithValue("@AvgRating", bookModel.AvgRating);
+                    com.Parameters.AddWithValue("@RatingCount", bookModel.RatingCount);
+                    com.Parameters.AddWithValue("@BookImg", bookModel.BookImg);
+
+                    var result = com.ExecuteNonQuery();
+                    if (result != 0)
+                    {
+                        SqlDataReader reader = com.ExecuteReader();
+                        BookModel response = new BookModel();
+                        if (reader.Read())
+                        {
+                            response.BookId = reader["BookId"] == DBNull.Value ? default : reader.GetInt32("BookId");
+                            response.BookName = reader["BookName"] == DBNull.Value ? default : reader.GetString("BookName");
+                            response.AuthorName = reader["AuthorName"] == DBNull.Value ? default : reader.GetString("AuthorName");
+                            response.Description = reader["Description"] == DBNull.Value ? default : reader.GetString("Description");
+                            response.Quantity = reader["Quantity"] == DBNull.Value ? default : reader.GetInt32("Quantity");
+                            response.OriginalPrice = reader["OriginalPrice"] == DBNull.Value ? default : reader.GetInt32("OriginalPrice");
+                            response.DiscountPrice = reader["DiscountPrice"] == DBNull.Value ? default : reader.GetInt32("DiscountPrice");
+                            response.AvgRating = reader["AvgRating"] == DBNull.Value ? default : reader.GetInt32("AvgRating");
+                            response.RatingCount = reader["RatingCount"] == DBNull.Value ? default : reader.GetInt32("RatingCount");
+                            response.BookImg = reader["BookImg"] == DBNull.Value ? default : reader.GetString("BookImg");
+                        }
+
+                        return response;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                sqlconnection.Close();
+            }
+        }
     }
 }
