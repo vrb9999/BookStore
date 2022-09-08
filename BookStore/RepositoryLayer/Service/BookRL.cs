@@ -205,5 +205,35 @@ namespace RepositoryLayer.Service
                 sqlconnection.Close();
             }
         }
+
+        public bool DeleteBook(int BookId)
+        {
+            SqlConnection sqlConnection = new SqlConnection(this.connectionString);
+            try
+            {
+                using (sqlConnection)
+                {
+                    sqlConnection.Open();
+                    SqlCommand cmd = new SqlCommand("spDeleteBook", sqlConnection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@BookId ", BookId);
+                    var result = cmd.ExecuteNonQuery();
+                    if (result == 0)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                sqlConnection.Close();
+            }
+        }
     }
 }
