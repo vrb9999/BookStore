@@ -104,6 +104,7 @@ namespace RepositoryLayer.Service
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
+                    new Claim(ClaimTypes.Role, "User"),
                     new Claim("Email", email),
                     new Claim("UserId",userId.ToString())
                     }),
@@ -203,7 +204,6 @@ namespace RepositoryLayer.Service
                     Subject = new ClaimsIdentity(new Claim[]
                     {
                     new Claim("Email", email)
-
                     }),
                     Expires = DateTime.UtcNow.AddHours(2),
 

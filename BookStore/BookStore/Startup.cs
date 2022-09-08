@@ -34,6 +34,10 @@ namespace BookStore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddAuthorization(x => {
+                x.AddPolicy("AdminRole", policy => policy.RequireRole("Admin"));
+                x.AddPolicy("UserRole", policy => policy.RequireRole("User"));
+            });
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -81,6 +85,10 @@ namespace BookStore
                     );
             services.AddTransient<IUserRL, UserRL>();
             services.AddTransient<IUserBL, UserBL>();
+            services.AddTransient<IAdminRL, AdminRL>();
+            services.AddTransient<IAdminBL, AdminBL>();
+            services.AddTransient<IBookRL, BookRL>();
+            services.AddTransient<IBookBL, BookBL>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,0 +1,13 @@
+﻿using DatabaseLayer.Book;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace BusinessLayer.Interface
+{
+    public interface IBookBL
+    {
+        public BookModel AddBook(BookModel bookModel);
+        public List<BookModel> GetAllBooks();
+    }
+}
