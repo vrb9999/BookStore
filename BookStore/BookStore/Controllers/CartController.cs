@@ -23,55 +23,92 @@ namespace BookStore.Controllers
 
         [Authorize(Roles = Role.User)]
         [HttpPost("AddToCart")]
-        public IActionResult AddtoCart(CartPostModel cartPostModel)
+        public ActionResult AddtoCart(CartModel cart)
         {
             try
             {
-                var identity = User.Identity as ClaimsIdentity;
-                IEnumerable<Claim> claims = identity.Claims;
-                var userId = claims.Where(p => p.Type == @"UserId").FirstOrDefault()?.Value;
-                int UserId = int.Parse(userId);
-                var result = this.cartBL.AddToCart(UserId, cartPostModel);
-                if (result == true)
+                var currentUser = HttpContext.User;
+                int UserId = Convert.ToInt32(currentUser.Claims.FirstOrDefault(c => c.Type == "UserId").Value);
+
+                var res = this.cartBL.AddCart(cart, UserId);
+
+                if (res != null)
                 {
-                    return this.Ok(new { Status = true, Message = "Book is added to cart" });
+                    return this.Ok(new { success = true, message = "Book added to the cart successfully", data = res });
                 }
-                else
-                {
-                    return this.BadRequest(new { Status = false, Message = "Adding to bag failed ! try again" });
-                }
+                return this.BadRequest(new { success = false, message = "Failed to add book to cart", data = res });
             }
             catch (Exception ex)
             {
+
                 throw ex;
             }
         }
 
         [Authorize(Roles = Role.User)]
-        [HttpGet("GetCartBooks")]
-        public IActionResult GetCart()
+        [HttpPut("UpdateCart")]
+        public ActionResult updateCart(int cartId, CartModel cart)
         {
-            List<CartModel> carts = new List<CartModel>();
             try
             {
-                var identity = User.Identity as ClaimsIdentity;
-                IEnumerable<Claim> claims = identity.Claims;
-                var userId = claims.Where(p => p.Type == @"UserId").FirstOrDefault()?.Value;
-                int UserId = int.Parse(userId);
-                carts = this.cartBL.GetCart(UserId);
+                var currentUser = HttpContext.User;
+                int UserId = Convert.ToInt32(currentUser.Claims.FirstOrDefault(c => c.Type == "UserId").Value);
 
-                if (carts != null)
-                {
-                    return this.Ok(new { success = true, Message = "Cart Get All Successfully", data = carts });
-                }
-                else
-                {
-                    return this.BadRequest(new { success = false, Message = "Cart Get All Unsuccessfully " });
+                var res = this.cartBL.UpdateCart(cartId, cart, UserId);
 
+                if (res != null)
+                {
+                    return this.Ok(new { success = true, message = "Updated cart successfully", data = res });
                 }
+                return this.BadRequest(new { success = false, message = "Failed to update cart", data = res });
+
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
+        [Authorize(Roles = Role.User)]
+        [HttpGet("GetAllBookFromCart")]
+        public ActionResult GetAllBookFromCart()
+        {
+            try
+            {
+                var currentUser = HttpContext.User;
+                int UserId = Convert.ToInt32(currentUser.Claims.FirstOrDefault(c => c.Type == "UserId").Value);
+                var res = this.cartBL.GetAllCart(UserId);
+
+                if (res != null)
+                {
+                    return this.Ok(new { success = true, message = "Getting all books from cart", data = res });
+                }
+                return this.BadRequest(new { success = false, message = "Failed to get cart Items", data = res });
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [Authorize(Roles = Role.User)]
+        [HttpDelete("DeleteCartItem")]
+        public ActionResult DeleteCart(int cartId)
+        {
+            try
+            {
+                var res = this.cartBL.DeleteCart(cartId);
+
+                if (res != null)
+                {
+                    return this.Ok(new { success = true, message = "Deleting books from cart", data = res });
+                }
+                return this.BadRequest(new { success = false, message = "Failed to delete cart Items", data = res });
             }
             catch (Exception ex)
             {
+
                 throw ex;
             }
         }

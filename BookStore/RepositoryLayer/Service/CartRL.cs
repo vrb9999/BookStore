@@ -18,29 +18,30 @@ namespace RepositoryLayer.Service
             connectionString = configuartion.GetConnectionString("BookStore_db");
         }
 
-        public bool AddToCart(int UserId, CartPostModel cartPostModel)
+        public CartModel AddCart(CartModel cart, int UserId)
         {
-            SqlConnection connection = new SqlConnection(connectionString);
-
+            SqlConnection sqlConnection = new SqlConnection(connectionString);
             try
             {
-                using (connection)
+                using (sqlConnection)
                 {
-                    connection.Open();
-                    //Creating a stored Procedure for adding Users into database
-                    SqlCommand cmd = new SqlCommand("spAddToCart", connection);
+                    sqlConnection.Open();
+                    SqlCommand cmd = new SqlCommand("spAddToCart", sqlConnection);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@BookId", cartPostModel.BookId);
-                    cmd.Parameters.AddWithValue("@UserId", UserId);
-                    cmd.Parameters.AddWithValue("@Quantity", cartPostModel.Quantity);
+
+                    cmd.Parameters.AddWithValue("@BookId ", cart.BookId);
+                    cmd.Parameters.AddWithValue("@Book_Quantity ", cart.BookQuantity);
+                    cmd.Parameters.AddWithValue("@UserId ", UserId);
+                                        
                     var result = cmd.ExecuteNonQuery();
-                    if (result > 0)
+
+                    if (result != 0)
                     {
-                        return true;
+                        return cart;
                     }
                     else
                     {
-                        return false;
+                        return null;
                     }
                 }
             }
@@ -50,43 +51,40 @@ namespace RepositoryLayer.Service
             }
             finally
             {
-                connection.Close();
+                sqlConnection.Close();
             }
         }
 
-        public List<CartModel> GetCart(int UserId)
+        public List<GetCartModel> GetAllCart(int UserId)
         {
-            SqlConnection connection = new SqlConnection(connectionString);
-            List<CartModel> cartList = new List<CartModel>();
-
+            List<GetCartModel> list = new List<GetCartModel>();
+            SqlConnection sqlConnection = new SqlConnection(this.connectionString);
             try
             {
-                using (connection)
+                using (sqlConnection)
                 {
-                    connection.Open();
-                    //Creating a stored Procedure for adding Users into database
-                    SqlCommand cmd = new SqlCommand("spGetAllCart", connection);
+                    sqlConnection.Open();
+                    SqlCommand cmd = new SqlCommand("spGetAllBookFromCart", sqlConnection);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@UserId", UserId);
-                    CartModel cart = new CartModel();
+
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        cart.CartId = Convert.ToInt32(reader["CartId"]);
-                        cart.BookId = Convert.ToInt32(reader["BookId"]);
-                        cart.UserId = Convert.ToInt32(reader["UserId"]);
-                        cart.Quantity = Convert.ToInt32(reader["Quantity"]);
-                        cart.BookName = Convert.ToString(reader["BookName"]);
-                        cart.AuthorName = Convert.ToString(reader["AuthorName"]);
-                        cart.Description = Convert.ToString(reader["Description"]);
-                        cart.OriginalPrice = Convert.ToInt32(reader["OriginalPrice"]);
-                        cart.DiscountPrice = Convert.ToInt32(reader["DiscountPrice"]);
-                        cart.BookImg = Convert.ToString(reader["BookImg"]);
-                        
-
-                        cartList.Add(cart);
+                        GetCartModel getCartModel = new GetCartModel();
+                        getCartModel.CartId = reader["CartId"] == DBNull.Value ? default : reader.GetInt32("CartId");
+                        getCartModel.UserId = UserId;
+                        getCartModel.BookId = reader["BookId"] == DBNull.Value ? default : reader.GetInt32("BookId");
+                        getCartModel.BookName = reader["BookName"] == DBNull.Value ? default : reader.GetString("BookName");
+                        getCartModel.AuthorName = reader["AuthorName"] == DBNull.Value ? default : reader.GetString("AuthorName");
+                        getCartModel.Book_Quantity = reader["Book_Quantity"] == DBNull.Value ? default : reader.GetInt32("Book_Quantity");
+                        getCartModel.OriginalPrice = reader["OriginalPrice"] == DBNull.Value ? default : reader.GetInt32("OriginalPrice");
+                        getCartModel.DiscountPrice = reader["DiscountPrice"] == DBNull.Value ? default : reader.GetInt32("DiscountPrice");
+                        getCartModel.BookImg = reader["BookImg"] == DBNull.Value ? default : reader.GetString("BookImg");
+                        list.Add(getCartModel);
                     }
-                    return cartList;
+
+                    return list;
                 }
             }
             catch (Exception ex)
@@ -95,7 +93,81 @@ namespace RepositoryLayer.Service
             }
             finally
             {
-                connection.Close();
+                sqlConnection.Close();
+            }
+        }
+
+        public string DeleteCart(int CartId)
+        {
+            SqlConnection sqlConnection = new SqlConnection(connectionString);
+            try
+            {
+                using (sqlConnection)
+                {
+                    sqlConnection.Open();
+                    SqlCommand cmd = new SqlCommand("spDeleteCart", sqlConnection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@CartId ", CartId);
+                    
+                    var result = cmd.ExecuteNonQuery();
+
+                    if (result != 0)
+                    {
+                        return "Remove Cart";
+                    }
+                    else
+                    {
+                        return "Failed";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                sqlConnection.Close();
+            }
+        }
+
+        public CartModel UpdateCart(int CartId, CartModel cart, int UserId)
+        {
+            SqlConnection sqlConnection = new SqlConnection(connectionString);
+            try
+            {
+                using (sqlConnection)
+                {
+                    sqlConnection.Open();
+                    SqlCommand cmd = new SqlCommand("SpUpdateCart", sqlConnection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@CartId ", CartId);
+                    cmd.Parameters.AddWithValue("@BookQuantity ", cart.BookQuantity);
+                    cmd.Parameters.AddWithValue("@BookId ", cart.BookId);
+                    cmd.Parameters.AddWithValue("@UserId ", UserId);
+                    
+                    var result = cmd.ExecuteNonQuery();
+
+                    if (result != 0)
+                    {
+                        return cart;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                sqlConnection.Close();
             }
         }
     }

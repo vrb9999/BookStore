@@ -1,50 +1,73 @@
-create table Cart(
-CartId int Identity(1,1)Primary key,
-BookId int FOREIGN KEY REFERENCES Book(BookId),
-UserId int FOREIGN KEY REFERENCES Users(UserId),
-Quantity int
-)
+Create Table Cart
+(
+CartId int identity(1,1) primary key,
+UserId int not null foreign key (UserId) references Users(UserId),
+BookId int not null foreign key (BookId) references Book(BookId),
+Book_Quantity int
+);
 
 select * from Cart
 
 ---------------------------------------------- Add to Cart ----------------------------------------------
-Create procedure spAddToCart(
-@BookId int,
-@UserId int,  
-@Quantity int
-)  
-As  
-Begin try
-insert into Cart (BookId,UserId,Quantity) values (@BookId,@UserId,@Quantity)
-end try  
-Begin catch  
-SELECT   
- ERROR_NUMBER() AS ErrorNumber,  
- ERROR_STATE() AS ErrorState,  
- ERROR_PROCEDURE() AS ErrorProcedure,  
- ERROR_LINE() AS ErrorLine,  
- ERROR_MESSAGE() AS ErrorMessage;  
-END CATCH
+Create procedure spAddToCart
+( 
+  @Book_Quantity int,
+  @UserId int,
+  @BookId int
+)
+As
+Begin
+	insert into cart(Book_Quantity,UserId,BookId)
+	values ( @Book_Quantity,@UserId, @BookId);
+End;
 
----------------------------------------------- Get all cart ----------------------------------------------
-create procedure spGetAllCart(
+---------------------------------------------- Get Book from Cart ----------------------------------------------
+alter procedure spGetAllBookFromCart
+(
 @UserId int
-)  
-As  
-Begin try  
-select Cart.CartId,Cart.BookId,Cart.Quantity,Cart.UserId,
-Book.Description,Book.BookName,Book.AuthorName,Book.OriginalPrice,Book.DiscountPrice,Book.BookImg
-from Cart inner join Book on Cart.BookId=Book.BookId
-where Cart.UserId=@UserId
+)
+AS
+Begin
+	select
+		CartId,
+		c.BookId,
+		UserId,
+		c.Book_Quantity,
+		BookName,
+		BookImg,
+		AuthorName,
+		DiscountPrice,
+		OriginalPrice
+		from Cart c
+		join Book b
+		on c.BookId = b.BookId
+		where UserId = @UserId;
+End;
 
-end try  
-Begin catch  
-SELECT   
- ERROR_NUMBER() AS ErrorNumber,  
- ERROR_STATE() AS ErrorState,  
- ERROR_PROCEDURE() AS ErrorProcedure,  
- ERROR_LINE() AS ErrorLine,  
- ERROR_MESSAGE() AS ErrorMessage;  
-END CATCH
+exec spGetAllBookFromCart '1'
 
-exec spGetAllCart '1'
+---------------------------------------------- Update Cart ----------------------------------------------
+create procedure spUpdateCart
+(
+	@BookQuantity int,
+	@BookId int,
+	@UserId int,
+	@CartId int
+)
+as
+begin
+update Cart set BookId=@BookId,
+				UserId=@UserId,
+				Book_Quantity=@BookQuantity
+				where CartId=@CartId;
+end
+
+---------------------------------------------- Delete Cart ----------------------------------------------
+Create Procedure spDeleteCart
+(
+@CartId int
+)
+As
+Begin
+	Delete from Cart where CartId = @CartId;
+End;

@@ -15,27 +15,51 @@ namespace BusinessLayer.Service
             this.cartRL = cartRL;
         }
 
-        public bool AddToCart(int UserId, CartPostModel cartPostModel)
+        public CartModel AddCart(CartModel cart, int UserId)
         {
             try
             {
-                return this.cartRL.AddToCart(UserId, cartPostModel);
+                return this.cartRL.AddCart(cart, UserId);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
-        public List<CartModel> GetCart(int UserId)
+        public List<GetCartModel> GetAllCart(int UserId)
         {
             try
             {
-                return this.cartRL.GetCart(UserId);
+                return this.cartRL.GetAllCart(UserId);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
+            }
+        }
+
+        public string DeleteCart(int CartId)
+        {
+            try
+            {
+                return this.cartRL.DeleteCart(CartId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public CartModel UpdateCart(int CartId, CartModel cart, int UserId)
+        {
+            try
+            {
+                return this.cartRL.UpdateCart(CartId, cart, UserId);
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
     }
