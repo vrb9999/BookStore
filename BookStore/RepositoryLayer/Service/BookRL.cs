@@ -70,20 +70,20 @@ namespace RepositoryLayer.Service
                     sqlConnection.Open();
                     SqlCommand cmd = new SqlCommand("spGetAllBooks", sqlConnection);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    BookModel getAllBook = new BookModel();
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
+                        BookModel getAllBook = new BookModel();
                         getAllBook.BookId = reader["BookId"] == DBNull.Value ? default : reader.GetInt32("BookId");
-                        getAllBook.BookName = Convert.ToString(reader["BookName"]);
-                        getAllBook.AuthorName = Convert.ToString(reader["AuthorName"]);
-                        getAllBook.Description = Convert.ToString(reader["Description"]);
-                        getAllBook.Quantity = Convert.ToInt32(reader["Quantity"]);
-                        getAllBook.OriginalPrice = Convert.ToInt32(reader["OriginalPrice"]);
-                        getAllBook.DiscountPrice = Convert.ToInt32(reader["DiscountPrice"]);
-                        getAllBook.AvgRating = Convert.ToInt32(reader["AvgRating"]);
-                        getAllBook.RatingCount = Convert.ToInt32(reader["RatingCount"]);
-                        getAllBook.BookImg = Convert.ToString(reader["BookImg"]);
+                        getAllBook.BookName = reader["BookName"] == DBNull.Value ? default : reader.GetString("BookName");
+                        getAllBook.AuthorName = reader["AuthorName"] == DBNull.Value ? default : reader.GetString("AuthorName");
+                        getAllBook.Description = reader["Description"] == DBNull.Value ? default : reader.GetString("Description");
+                        getAllBook.Quantity = reader["Quantity"] == DBNull.Value ? default : reader.GetInt32("Quantity");
+                        getAllBook.OriginalPrice = reader["OriginalPrice"] == DBNull.Value ? default : reader.GetInt32("OriginalPrice");
+                        getAllBook.DiscountPrice = reader["DiscountPrice"] == DBNull.Value ? default : reader.GetInt32("DiscountPrice");
+                        getAllBook.AvgRating = reader["AvgRating"] == DBNull.Value ? default : reader.GetInt32("AvgRating");
+                        getAllBook.RatingCount = reader["RatingCount"] == DBNull.Value ? default : reader.GetInt32("RatingCount");
+                        getAllBook.BookImg = reader["BookImg"] == DBNull.Value ? default : reader.GetString("BookImg");
 
                         listOfBooks.Add(getAllBook);
                     }

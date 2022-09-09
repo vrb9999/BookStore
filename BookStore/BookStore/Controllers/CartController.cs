@@ -112,5 +112,25 @@ namespace BookStore.Controllers
                 throw ex;
             }
         }
+
+        [Authorize(Roles = Role.User)]
+        [HttpGet("GetCartById")]
+        public IActionResult GetCartById(int CartId)
+        {
+            try
+            {
+                var result = this.cartBL.GetCartById(CartId);
+                if (result == null)
+                {
+                    return this.BadRequest(new { success = false, message = $"Failed to get cart id = {CartId}" });
+                }
+                return this.Ok(new { success = true, message = $"Cart id = {CartId} fetched Successfully", data = result });
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

@@ -97,6 +97,52 @@ namespace RepositoryLayer.Service
             }
         }
 
+        public GetCartModel GetCartById(int CartId)
+        {
+            GetCartModel listById = new GetCartModel();
+            SqlConnection sqlConnection = new SqlConnection(this.connectionString);
+            try
+            {
+                using (sqlConnection)
+                {
+                    sqlConnection.Open();
+                    SqlCommand cmd = new SqlCommand("spGetCartById", sqlConnection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@CartId", CartId);
+                    GetCartModel getCartModel = new GetCartModel();
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        getCartModel.CartId = reader["CartId"] == DBNull.Value ? default : reader.GetInt32("CartId");
+                        getCartModel.BookId = reader["BookId"] == DBNull.Value ? default : reader.GetInt32("BookId");
+                        getCartModel.BookName = reader["BookName"] == DBNull.Value ? default : reader.GetString("BookName");
+                        getCartModel.AuthorName = reader["AuthorName"] == DBNull.Value ? default : reader.GetString("AuthorName");
+                        getCartModel.Book_Quantity = reader["Book_Quantity"] == DBNull.Value ? default : reader.GetInt32("Book_Quantity");
+                        getCartModel.OriginalPrice = reader["OriginalPrice"] == DBNull.Value ? default : reader.GetInt32("OriginalPrice");
+                        getCartModel.DiscountPrice = reader["DiscountPrice"] == DBNull.Value ? default : reader.GetInt32("DiscountPrice");
+                        getCartModel.BookImg = reader["BookImg"] == DBNull.Value ? default : reader.GetString("BookImg");
+                    }
+                    if (getCartModel.CartId > 0)
+                    {
+                        return getCartModel;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                sqlConnection.Close();
+            }
+        }
+
         public string DeleteCart(int CartId)
         {
             SqlConnection sqlConnection = new SqlConnection(connectionString);
