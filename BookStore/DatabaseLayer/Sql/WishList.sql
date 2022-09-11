@@ -24,7 +24,7 @@ SELECT
  ERROR_PROCEDURE() AS ErrorProcedure,  
  ERROR_LINE() AS ErrorLine,  
  ERROR_MESSAGE() AS ErrorMessage;  
-END CATCH;
+END CATCH
 
 
 exec spAddToWishList 1,3
