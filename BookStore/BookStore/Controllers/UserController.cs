@@ -65,7 +65,7 @@ namespace BookStore.Controllers
             }
         }
 
-        [HttpPost("ForgetPasswordUser")]
+        [HttpPost("ForgetPasswordUser/{email}")]
         public IActionResult ForgetPasswordUser(string email)
         {
             try
@@ -80,7 +80,7 @@ namespace BookStore.Controllers
             }
         }
 
-        [Authorize]
+        
         [HttpPut("ResetPassword")]
         public IActionResult ResetPassword(PasswordModel modelPassword)
         {
