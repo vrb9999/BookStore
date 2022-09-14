@@ -34,6 +34,14 @@ namespace BookStore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                name: "AllowOrigin",
+              builder => {
+                  builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+              });
+            });
             services.AddAuthorization(x => {
                 x.AddPolicy("AdminRole", policy => policy.RequireRole("Admin"));
                 x.AddPolicy("UserRole", policy => policy.RequireRole("User"));
@@ -109,6 +117,7 @@ namespace BookStore
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("AllowOrigin");
             app.UseHttpsRedirection();
 
             app.UseRouting();
