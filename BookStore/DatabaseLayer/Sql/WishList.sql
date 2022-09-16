@@ -8,7 +8,7 @@ Create table WishList
 Select * from WishList
 
 ---------------------------------------------- Add to WishList ----------------------------------------------
-alter procedure spAddToWishList
+create procedure spAddToWishList
 (
 @UserId int,
 @BookId int

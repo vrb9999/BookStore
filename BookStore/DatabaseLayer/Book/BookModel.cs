@@ -13,7 +13,7 @@ namespace DatabaseLayer.Book
         public int Quantity { get; set; }
         public int OriginalPrice { get; set; }
         public int DiscountPrice { get; set; }
-        public int AvgRating { get; set; }
+        public decimal AvgRating { get; set; }
         public int RatingCount { get; set; }
         public string BookImg { get; set; }
     }

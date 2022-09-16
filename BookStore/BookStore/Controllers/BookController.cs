@@ -57,7 +57,7 @@ namespace BookStore.Controllers
             }
         }
 
-        [HttpGet("GetBookById")]
+        [HttpGet("GetBookById/{BookId}")]
         public IActionResult GetBookById(int BookId)
         {
             try

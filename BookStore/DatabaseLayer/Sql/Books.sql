@@ -6,13 +6,12 @@ Description varchar(max) not null,
 Quantity int not null,
 OriginalPrice int not null,
 DiscountPrice int not null,
-AvgRating int,
+AvgRating decimal(2,1),
 RatingCount int,
 BookImg varchar(max)
 )
 
 select * from Book
-
 ---------------------------------------------- Add Book ----------------------------------------------
 Create procedure spAddBook(
 @BookName varchar(max),
@@ -21,7 +20,7 @@ Create procedure spAddBook(
 @Quantity int,
 @OriginalPrice int,
 @DiscountPrice int,
-@AvgRating int,
+@AvgRating decimal(2,1),
 @RatingCount int,
 @BookImg varchar(max) 
 )  
@@ -81,7 +80,7 @@ create procedure spUpdateBook(
 @Quantity int,
 @OriginalPrice int,
 @DiscountPrice int,
-@AvgRating int,
+@AvgRating decimal(2,1),
 @RatingCount int,
 @BookImg varchar(max) 
 )  

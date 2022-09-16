@@ -81,7 +81,7 @@ namespace RepositoryLayer.Service
                         getAllBook.Quantity = reader["Quantity"] == DBNull.Value ? default : reader.GetInt32("Quantity");
                         getAllBook.OriginalPrice = reader["OriginalPrice"] == DBNull.Value ? default : reader.GetInt32("OriginalPrice");
                         getAllBook.DiscountPrice = reader["DiscountPrice"] == DBNull.Value ? default : reader.GetInt32("DiscountPrice");
-                        getAllBook.AvgRating = reader["AvgRating"] == DBNull.Value ? default : reader.GetInt32("AvgRating");
+                        getAllBook.AvgRating = reader["AvgRating"] == DBNull.Value ? default : reader.GetDecimal("AvgRating");
                         getAllBook.RatingCount = reader["RatingCount"] == DBNull.Value ? default : reader.GetInt32("RatingCount");
                         getAllBook.BookImg = reader["BookImg"] == DBNull.Value ? default : reader.GetString("BookImg");
 
@@ -122,7 +122,7 @@ namespace RepositoryLayer.Service
                         getBookById.Quantity = Convert.ToInt32(reader["Quantity"]);
                         getBookById.OriginalPrice = Convert.ToInt32(reader["OriginalPrice"]);
                         getBookById.DiscountPrice = Convert.ToInt32(reader["DiscountPrice"]);
-                        getBookById.AvgRating = Convert.ToInt32(reader["AvgRating"]);
+                        getBookById.AvgRating = Convert.ToDecimal(reader["AvgRating"]);
                         getBookById.RatingCount = Convert.ToInt32(reader["RatingCount"]);
                         getBookById.BookImg = Convert.ToString(reader["BookImg"]);
                     }
@@ -183,7 +183,7 @@ namespace RepositoryLayer.Service
                             response.Quantity = reader["Quantity"] == DBNull.Value ? default : reader.GetInt32("Quantity");
                             response.OriginalPrice = reader["OriginalPrice"] == DBNull.Value ? default : reader.GetInt32("OriginalPrice");
                             response.DiscountPrice = reader["DiscountPrice"] == DBNull.Value ? default : reader.GetInt32("DiscountPrice");
-                            response.AvgRating = reader["AvgRating"] == DBNull.Value ? default : reader.GetInt32("AvgRating");
+                            response.AvgRating = reader["AvgRating"] == DBNull.Value ? default : reader.GetDecimal("AvgRating");
                             response.RatingCount = reader["RatingCount"] == DBNull.Value ? default : reader.GetInt32("RatingCount");
                             response.BookImg = reader["BookImg"] == DBNull.Value ? default : reader.GetString("BookImg");
                         }
